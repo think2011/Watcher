@@ -1,5 +1,5 @@
 {
-  "name": "watcher",
+  "name": "z-watcher",
   "version": "1.0.0",
   "description": "简单的事件监听",
   "main": "Watcher.js",
