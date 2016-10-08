@@ -19,6 +19,8 @@
 
         on: function (type, fn) {
             this._getEvent(type).push(fn)
+
+            return this
         },
 
         trigger: function (type) {
@@ -28,6 +30,8 @@
             event.forEach(function (fn) {
                 fn.apply(fn, params)
             })
+
+            return this
         },
 
         _getEvent: function (type) {
@@ -44,6 +48,8 @@
             } else {
                 event.splice(event.indexOf(fn), 1)
             }
+
+            return this
         }
     }
 
