@@ -40,7 +40,7 @@
             return this.events[type]
         },
 
-        remove: function (type, fn) {
+        off: function (type, fn) {
             var event = this._getEvent(type)
 
             if (!fn) {
