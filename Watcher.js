@@ -11,7 +11,8 @@
     }
 }(this, function () {
     var Watcher = function () {
-        this.events = {}
+        this._events     = {}
+        this._tempEvents = {}
     }
 
     Watcher.prototype = {
@@ -20,31 +21,42 @@
         on: function (type, fn) {
             this._getEvent(type).push(fn)
 
+            var tempEvent = this._getEvent(type, true)
+            while (tempEvent.length) {
+                fn.apply(fn, tempEvent.shift())
+            }
+
             return this
         },
 
-        trigger: function (type) {
+        emit: function (type) {
             var event  = this._getEvent(type)
             var params = Array.prototype.slice.call(arguments, 1)
 
-            event.forEach(function (fn) {
-                fn.apply(fn, params)
-            })
+            if (event.length) {
+                event.forEach(function (fn) {
+                    fn.apply(fn, params)
+                })
+            } else {
+                this._getEvent(type, true).push(params)
+            }
 
             return this
         },
 
-        _getEvent: function (type) {
-            if (!this.events[type]) this.events[type] = []
+        _getEvent: function (type, isTemp) {
+            var event = isTemp ? '_tempEvents' : '_events'
 
-            return this.events[type]
+            if (!this[event][type]) this[event][type] = []
+
+            return this[event][type]
         },
 
         off: function (type, fn) {
             var event = this._getEvent(type)
 
             if (!fn) {
-                this.events[type] = []
+                this._events[type] = []
             } else {
                 event.splice(event.indexOf(fn), 1)
             }
