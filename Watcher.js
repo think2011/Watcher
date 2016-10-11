@@ -53,12 +53,20 @@
         },
 
         off: function (type, fn) {
-            var event = this._getEvent(type)
+            if(!type) {
+                for (var p in this._events) {
+                    if (!this._events.hasOwnProperty(p)) continue;
 
-            if (!fn) {
-                this._events[type] = []
+                    this.off(p)
+                }
             } else {
-                event.splice(event.indexOf(fn), 1)
+                var event = this._getEvent(type)
+
+                if (!fn) {
+                    this._events[type] = []
+                } else {
+                    event.splice(event.indexOf(fn), 1)
+                }
             }
 
             return this
